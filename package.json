@@ -1,0 +1,34 @@
+{
+  "name": "fullstack-smapp",
+  "version": "1.0.0",
+  "description": "MERN Fullstack social media app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "server": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbeTavarez/Fullstack-SMAPP.git"
+  },
+  "author": "Abraham E. Tavarez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AbeTavarez/Fullstack-SMAPP/issues"
+  },
+  "homepage": "https://github.com/AbeTavarez/Fullstack-SMAPP#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.7",
+    "express": "^4.17.3",
+    "express-validator": "^6.14.0",
+    "gravatar": "^1.8.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.4",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
