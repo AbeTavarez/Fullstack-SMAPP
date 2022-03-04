@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://abe-dev:abe123@listingsexpressapp.vvkf8.mongodb.net/fullstack-sampp?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://abe-dev:abe123@listingsexpressapp.vvkf8.mongodb.net/fullstack-sampp?retryWrites=true&w=majority",
+    "jwtSecret": "mysecrettoken" 
 }
