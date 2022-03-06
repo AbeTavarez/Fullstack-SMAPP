@@ -11,11 +11,6 @@ const { default: mongoose } = require("mongoose");
 // -note: we have access to the [req.user].
 // so we can access the user id that comes in the token
 
-//* @route GET /api/profile
-//* @desc Test route
-//* @access Public
-router.get("/", (req, res) => res.send("Profile test route"));
-
 //* @route GET /api/profile/me
 //* @desc Get current user profile
 //* @access Private
@@ -74,9 +69,13 @@ router.post(
       tiktok,
     } = req.body;
 
+    // gets user info
+    const user = await User.findById(req.user.id).select("-password");
+
     //* Build profile object
     const profileFields = {};
     profileFields.user = req.user.id;
+    profileFields.username = user.name;
     if (company) profileFields.company = company;
     if (website) profileFields.website = website;
     if (location) profileFields.location = location;
@@ -88,7 +87,7 @@ router.post(
       profileFields.skills = skills.split(",").map((skill) => skill.trim());
     }
 
-    // Build social object
+    //* Build social object
     profileFields.social = {};
     if (youtube) profileFields.social.youtube = youtube;
     if (twitter) profileFields.social.twitter = twitter;
@@ -99,7 +98,7 @@ router.post(
 
     try {
       if (mongoose.Types.ObjectId(req.user.id)) console.log("user is valid");
-      
+
       let profile = await Profile.findOne({ user: req.user.id });
 
       //* =============== Update existing Profile
@@ -109,14 +108,14 @@ router.post(
           { $set: profileFields },
           { new: true, upsert: true }
         );
-        // console.log('exitst',profile);
+
         return res.json(profile);
       }
 
       //* ============== Create New Profile
       profile = new Profile(profileFields);
       await profile.save();
-      //   console.log('NOT exitst',profile);
+
       res.json(profile);
     } catch (err) {
       console.error(err.message);
@@ -124,5 +123,61 @@ router.post(
     }
   }
 );
+
+//* @route GET /api/profile
+//* @desc Get All Profiles
+//* @access Public
+router.get("/", async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate("user", ["name", "avatar"]);
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+//* @route GET /api/profile/:username
+//* @desc Get Profile by user name
+//* @access Public
+router.get("/:username", async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ username: req.params.username });
+    console.log(profile);
+    if (!profile)
+      return res.status(400).json({ msg: "No profile found for this user." });
+
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+        return res.status(400).json({ msg: "No profile found for this user." });
+    }
+    res.status(500).send("Server Error");
+  }
+});
+
+//* @route GET /api/profile/users/:user_id
+//* @desc Get Profile by user id
+//* @access Public
+router.get("/users/:user_id", async (req, res) => {
+  console.log("or here");
+  try {
+    const profile = await Profile.findOne({
+      user: req.params.user_id,
+    }).populate("user", ["name", "avatar"]);
+
+    if (!profile)
+      return res.status(400).json({ msg: "No profile found for this user." });
+
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+        return res.status(400).json({ msg: "No profile found for this user." });
+    }
+    res.status(500).send("Server Error");
+  }
+});
 
 module.exports = router;

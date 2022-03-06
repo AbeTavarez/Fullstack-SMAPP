@@ -15,8 +15,8 @@ router.get("/", (req, res) => {
 });
 
 //* @route POST /api/users
-// @desc Register user
-// @access Public
+//* @desc Register user
+//* @access Public
 router.post(
   "/",
   [
