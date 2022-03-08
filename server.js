@@ -2,6 +2,9 @@ const express = require("express");
 const connectDB = require("./config/db");
 const morgan = require("morgan");
 const helmet = require("helmet");
+// documentation setup
+const swaggerUI = require("swagger-ui-express");
+const swaggerRoute = require("./docs/swagger");
 
 const app = express();
 // Connect to db
@@ -19,6 +22,7 @@ app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/profile", require("./routes/api/profile"));
 app.use("/api/posts", require("./routes/api/posts"));
+app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerRoute)); //documentation setup
 
 const PORT = process.env.PORT || 5000;
 
